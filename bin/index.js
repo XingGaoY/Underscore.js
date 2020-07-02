@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var performance = require('perf_hooks').performance;
 var array = new Array(10);
 for (var i = 0; i < 10; i++) {
     array[i] = i;

@@ -1,5 +1,5 @@
 import {usEachArray, usMapArray} from './lib/upperscore'
-const {performance} = require('perf_hooks');
+import {performance} from 'perf_hooks';
 
 let array:Array<number> = new Array(10);
 for(let i = 0; i < 10; i++){
