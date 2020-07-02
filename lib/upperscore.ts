@@ -22,8 +22,10 @@ export function usMapArray<T>(obj: Array<T>, func: Function, thisArg?: any): Arr
     return ret;
 };
 
-export function usReduceArray<T>(obj: Array<T>, func: Function, initialValue?: T){
-    let memo;
+// here return value and initialValue is not type T
+// explanation see uniTest: 'Calculate number of occurence in array'
+export function usReduceArray<T, K>(obj: Array<T>, func: Function, initialValue?: K): K{
+    let memo: K, i = 0;
 
     if(initialValue) {
         memo = initialValue;
@@ -31,8 +33,12 @@ export function usReduceArray<T>(obj: Array<T>, func: Function, initialValue?: T
     else if(obj.length === 0){
         throw new TypeError("Reduce of empty array with no initial value.");
     }
+    else {
+      memo = obj[0] as any;
+      i++;
+    }
 
-    for(let i = 1; i < obj.length; i++){
+    for(; i < obj.length; i++){
         memo = func(memo, obj[i], i, obj);
     }
 

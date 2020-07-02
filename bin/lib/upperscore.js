@@ -31,6 +31,9 @@ function usReduceArray(obj, func, initialValue) {
     else if (obj.length === 0) {
         throw new TypeError("Reduce of empty array with no initial value.");
     }
+    else {
+        memo = obj[0];
+    }
     for (var i = 1; i < obj.length; i++) {
         memo = func(memo, obj[i], i, obj);
     }
