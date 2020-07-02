@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var upperscore_1 = require("./lib/upperscore");
 var performance = require('perf_hooks').performance;
-var array = new Array(1000);
-for (var i = 0; i < 1000; i++) {
-    array[i] = Math.random();
+var array = new Array(10);
+for (var i = 0; i < 10; i++) {
+    array[i] = i;
 }
-var power2 = upperscore_1.usMapArray(array, function (element) { return element * element; });
-console.log(power2);
+var sum = array.reduce(function (acc, cur) {
+    return acc + cur;
+}, 10);
+console.log(sum);
 //us_each_obj(object, console.log);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usMapArray = exports.usEachArray = void 0;
+exports.usReduceArray = exports.usMapArray = exports.usEachArray = void 0;
 function usEachArray(obj, func, thisArg) {
     var T = thisArg;
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
@@ -23,6 +23,20 @@ function usMapArray(obj, func, thisArg) {
 }
 exports.usMapArray = usMapArray;
 ;
+function usReduceArray(obj, func, initialValue) {
+    var memo;
+    if (initialValue) {
+        memo = initialValue;
+    }
+    else if (obj.length === 0) {
+        throw new TypeError("Reduce of empty array with no initial value.");
+    }
+    for (var i = 1; i < obj.length; i++) {
+        memo = func(memo, obj[i], i, obj);
+    }
+    return memo;
+}
+exports.usReduceArray = usReduceArray;
 /*
 export function us_each_obj<T extends object, U extends keyof T>(obj: T, func: Function): object {
     let _keys: U = Object.keys(obj);

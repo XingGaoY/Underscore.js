@@ -21,6 +21,23 @@ export function usMapArray<T>(obj: Array<T>, func: Function, thisArg?: any): Arr
 
     return ret;
 };
+
+export function usReduceArray<T>(obj: Array<T>, func: Function, initialValue?: T){
+    let memo;
+
+    if(initialValue) {
+        memo = initialValue;
+    }
+    else if(obj.length === 0){
+        throw new TypeError("Reduce of empty array with no initial value.");
+    }
+
+    for(let i = 1; i < obj.length; i++){
+        memo = func(memo, obj[i], i, obj);
+    }
+
+    return memo;
+}
 /*
 export function us_each_obj<T extends object, U extends keyof T>(obj: T, func: Function): object {
     let _keys: U = Object.keys(obj);
