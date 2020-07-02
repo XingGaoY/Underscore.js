@@ -1,11 +1,13 @@
-import {usEachArray} from './lib/upperscore'
+import {usEachArray, usMapArray} from './lib/upperscore'
+const {performance} = require('perf_hooks');
 
-let array = [1, 2, 'a'];
-let object = {
-    name: 'anderson',
-    age: 10,
-    arr: [1, 2, 'a']
-};
+let array:Array<number> = new Array(1000);
+for(let i = 0; i < 1000; i++){
+    array[i] = Math.random();
+}
 
-usEachArray(array, console.log);
+let power2 = usMapArray(array, (element: number) => element*element);
+
+console.log(power2);
+
 //us_each_obj(object, console.log);
