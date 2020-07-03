@@ -5,8 +5,11 @@ var array = new Array(10);
 for (var i = 0; i < 10; i++) {
     array[i] = i;
 }
-var sum = upperscore_1.usReduceArray([1, 2, 3], function (acc, cur) {
+var sum = upperscore_1.ReduceArray([1, 2, 3], function (acc, cur) {
     return acc + cur;
 }, 0);
-console.log(sum);
+var idx = array.findIndex(function (element) { return element > 5; });
+var usidx = upperscore_1.FindIndexArray(array, function (element) { return element > 5; });
+console.log(idx);
+console.log(usidx);
 //us_each_obj(object, console.log);

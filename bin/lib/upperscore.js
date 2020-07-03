@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usReduceArray = exports.usMapArray = exports.usEachArray = void 0;
-function usEachArray(obj, func, thisArg) {
+exports.FindIndexArray = exports.ReduceArray = exports.MapArray = exports.EachArray = void 0;
+function EachArray(obj, func, thisArg) {
     var T = thisArg;
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
     // JS polyfill has type check, more rubust
@@ -11,9 +11,9 @@ function usEachArray(obj, func, thisArg) {
     }
     return obj;
 }
-exports.usEachArray = usEachArray;
+exports.EachArray = EachArray;
 ;
-function usMapArray(obj, func, thisArg) {
+function MapArray(obj, func, thisArg) {
     var ret = new Array(obj.length), T = thisArg;
     for (var i = 0; i < obj.length; i++) {
         var modified = func.call(T, obj[i], i, obj);
@@ -21,10 +21,12 @@ function usMapArray(obj, func, thisArg) {
     }
     return ret;
 }
-exports.usMapArray = usMapArray;
+exports.MapArray = MapArray;
 ;
-function usReduceArray(obj, func, initialValue) {
-    var memo;
+// here return value and initialValue is not type T
+// explanation see uniTest: 'Calculate number of occurence in array'
+function ReduceArray(obj, func, initialValue) {
+    var memo, i = 0;
     if (initialValue) {
         memo = initialValue;
     }
@@ -33,13 +35,27 @@ function usReduceArray(obj, func, initialValue) {
     }
     else {
         memo = obj[0];
+        i++;
     }
-    for (var i = 1; i < obj.length; i++) {
+    for (; i < obj.length; i++) {
         memo = func(memo, obj[i], i, obj);
     }
     return memo;
 }
-exports.usReduceArray = usReduceArray;
+exports.ReduceArray = ReduceArray;
+var FindIndexArray = createPredicateIndexFinder(1);
+exports.FindIndexArray = FindIndexArray;
+function createPredicateIndexFinder(dir) {
+    return function (obj, predicate, thisArg) {
+        var index = dir === 1 ? 0 : obj.length - 1;
+        for (; index >= 0 && index < obj.length; index += dir) {
+            var iValue = obj[index];
+            if (predicate.call(thisArg, iValue, index, obj)) {
+                return index;
+            }
+        }
+    };
+}
 /*
 export function us_each_obj<T extends object, U extends keyof T>(obj: T, func: Function): object {
     let _keys: U = Object.keys(obj);
