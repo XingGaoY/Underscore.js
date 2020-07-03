@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
-import { eachArray, mapArray, reduceArray, findIndexArray } from '../lib/upperscore';
+import {
+  eachArray, mapArray, reduceArray, findIndexArray,
+} from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
   describe('eachArray: ', () => {
@@ -29,7 +31,7 @@ describe('Module Collections: ', () => {
     it('Able to reference original array in function', () => {
       let answer: boolean = false;
       eachArray([1, 2, 3], (num: number, idx: number, arr: number[]) => {
-        if(num in arr) { answer = true;}
+        if (num in arr) { answer = true; }
       });
       assert.ok(answer);
     });
@@ -42,9 +44,9 @@ describe('Module Collections: ', () => {
     });
 
     it('Triple simple array with multiplier in context', () => {
-      const answers: number[] = mapArray([1, 2, 3], function (this: {multiplier: 0}, num: number){
+      const answers: number[] = mapArray([1, 2, 3], function (this: {multiplier: 0}, num: number) {
         return num * this.multiplier;
-      }, {multiplier: 3});
+      }, { multiplier: 3 });
       assert.deepEqual(answers, [3, 6, 9]);
     });
   });
@@ -66,33 +68,32 @@ describe('Module Collections: ', () => {
     });
 
     it('Convert 2d array to 1d', () => {
-      const array1D: number[] = reduceArray([[0, 1], [2, 3], [4, 5]], (memo: number[], cur: number[]) => {
-        return memo.concat(cur);
-      });
+      const array1D: number[] = reduceArray([[0, 1], [2, 3], [4, 5]],
+        (memo: number[], cur: number[]) => memo.concat(cur));
       assert.deepEqual(array1D, [0, 1, 2, 3, 4, 5]);
     });
 
     it('Calculate number of occurence in array', () => {
       const array: string[] = ['1', '2', '3', '3', '2', '3'];
-      const countedOccurence: {[key: string]:number} = reduceArray(array, (memo: {[key: string]:number}, cur: string) => {
-        if(cur in memo) {
-          memo[cur]++;
-        }
-        else {
-          memo[cur] = 1;
-        }
+      const countedOccurence: {[key: string]:number} = reduceArray(array,
+        (memo: {[key: string]:number}, cur: string) => {
+          if (cur in memo) {
+            memo[cur]++;
+          } else {
+            memo[cur] = 1;
+          }
 
-        return memo;
-      }, {});
-      assert.deepEqual(countedOccurence, { '1': 1, '2': 2, '3': 3 });
-    })
+          return memo;
+        }, {});
+      assert.deepEqual(countedOccurence, { 1: 1, 2: 2, 3: 3 });
+    });
   });
 
   describe('findIndexArray', () => {
     it('Find first prime', () => {
-      function isPrime(element: number, index?: number, array?: number[]){
+      function isPrime(element: number) {
         let start = 2;
-        while (start <= Math.sqrt(element)){
+        while (start <= Math.sqrt(element)) {
           if (element % start++ < 1) {
             return false;
           }
@@ -100,7 +101,7 @@ describe('Module Collections: ', () => {
         return element > 1;
       }
 
-      let index = findIndexArray([4, 6, 8, 9, 11], isPrime);
+      const index = findIndexArray([4, 6, 8, 9, 11], isPrime);
       assert.deepEqual(index, 4);
     });
   });
