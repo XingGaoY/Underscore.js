@@ -61,4 +61,10 @@ function createPredicateIndexFinder(dir: number): Function {
 const findIndexArray = createPredicateIndexFinder(1);
 const findLastIndexArray = createPredicateIndexFinder(-1);
 
+export function find<T>(obj: Array<T>, predicate: Function, thisArg?: any) {
+  const key = findIndexArray(obj, predicate, thisArg);
+  if (key && key !== -1) return obj[key];
+  return undefined;
+}
+
 export { findIndexArray, findLastIndexArray };

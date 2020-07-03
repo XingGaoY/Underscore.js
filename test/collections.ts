@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 import {
-  eachArray, mapArray, reduceArray, findIndexArray,
+  eachArray, mapArray, reduceArray, findIndexArray, findLastIndexArray, find,
 } from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
@@ -90,19 +90,42 @@ describe('Module Collections: ', () => {
   });
 
   describe('findIndexArray', () => {
-    it('Find first prime', () => {
-      function isPrime(element: number) {
-        let start = 2;
-        while (start <= Math.sqrt(element)) {
-          if (element % start++ < 1) {
-            return false;
-          }
+    function isPrime(element: number) {
+      let start = 2;
+      while (start <= Math.sqrt(element)) {
+        if (element % start++ < 1) {
+          return false;
         }
-        return element > 1;
       }
+      return element > 1;
+    }
 
-      const index = findIndexArray([4, 6, 8, 9, 11], isPrime);
-      assert.deepEqual(index, 4);
+    const arrayPrime: number[] = [4, 6, 9, 7, 4, 11, 4];
+    const arrayNoPrime: number[] = [4, 6, 8];
+
+    it('FindIndex first prime', () => {
+      const index = findIndexArray(arrayPrime, isPrime);
+      assert.deepEqual(index, 3);
+    });
+
+    it('FindLastIndex of prime', () => {
+      const index = findLastIndexArray(arrayPrime, isPrime);
+      assert.deepEqual(index, 5);
+    });
+
+    it('FindIndex no prime', () => {
+      const index = findIndexArray(arrayNoPrime, isPrime);
+      assert.deepEqual(index, -1);
+    });
+
+    it('Find prime', () => {
+      const primeNumber = find(arrayPrime, isPrime);
+      assert.deepEqual(primeNumber, 7);
+    });
+
+    it('Find no prime', () => {
+      const primeNumber = find([4, 6, 8], isPrime);
+      assert.deepEqual(primeNumber, undefined);
     });
   });
 });
