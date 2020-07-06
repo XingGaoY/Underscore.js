@@ -8,6 +8,7 @@ import {
   findLastIndex,
   find,
   filter,
+  where,
   every,
 } from '../lib/upperscore';
 
@@ -190,6 +191,15 @@ describe('Module Collections: ', () => {
       const targetList = [{ a: 1, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }];
       assert.deepEqual(filter(list, (element: {[x: string]: number}) => element.a === 1),
         targetList);
+    });
+  });
+
+  describe('where', () => {
+    const list = [{ a: 1, b: 2 }, { a: 2, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }];
+    it('Find array with all values matches given KV', () => {
+      const result = where(list, { a: 1 });
+      assert.deepEqual(result, [{ a: 1, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }]);
+      assert.deepEqual(where(list, { a: 5 }), []);
     });
   });
 

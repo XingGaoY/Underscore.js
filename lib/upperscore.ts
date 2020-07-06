@@ -129,6 +129,27 @@ function filter<T extends Collection<any>>(
   return results;
 }
 
+function isMatch(obj: any, attrs: any): boolean {
+  const keys = Object.keys(attrs); const
+    { length } = keys;
+  if (obj == null) return !length;
+  for (let i = 0; i < length; i += 1) {
+    const key = keys[i];
+    if (attrs[key] !== obj[key] || !(key in obj)) return false;
+  }
+  return true;
+}
+
+function matcher(attrs: any) {
+  return function (obj: any) {
+    return isMatch(obj, attrs);
+  };
+}
+
+function where<T, U extends {}>(list: List<T>, properties: U): T[] {
+  return filter(list, matcher(properties));
+}
+
 export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
   for (let i = 0; i < obj.length; i++) {
     if (!cb.call(thisArg, obj[i], i, obj)) return false;
@@ -142,7 +163,8 @@ export {
   map,
   reduce,
   find,
-  filter,
   findIndex,
   findLastIndex,
+  filter,
+  where,
 };
