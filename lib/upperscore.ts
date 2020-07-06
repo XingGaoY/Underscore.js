@@ -77,4 +77,12 @@ export function filter<T>(obj: Array<T>, predicate: Function, thisArg?: any): Ar
   return results;
 }
 
+export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
+  for (let i = 0; i < obj.length; i++) {
+    if (!cb.call(thisArg, obj[i], i, obj)) return false;
+  }
+
+  return true;
+}
+
 export { findIndexArray, findLastIndexArray };

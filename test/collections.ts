@@ -8,6 +8,7 @@ import {
   findLastIndexArray,
   find,
   filter,
+  every,
 } from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
@@ -150,6 +151,24 @@ describe('Module Collections: ', () => {
       }
 
       assert.deepEqual(filterArray('ap'), ['apple', 'grapes']);
+    });
+  });
+
+  describe('Every', () => {
+    const arraySmall = [12, 5, 8, 11];
+    const arrayBig = [11, 12, 13];
+    it('Filter smaller value', () => {
+      assert.notOk(every(arraySmall, (element: number) => element >= 10));
+      assert.ok(every(arrayBig, (element: number) => element >= 10));
+    });
+
+    it('Filter smaller value with this', () => {
+      assert.notOk(every(arraySmall, function (this: {guard: 0}, element: number) {
+        return element >= this.guard;
+      }, { guard: 10 }));
+      assert.ok(every(arrayBig, function (this: {guard: 0}, element: number) {
+        return element >= this.guard;
+      }, { guard: 10 }));
     });
   });
 });
