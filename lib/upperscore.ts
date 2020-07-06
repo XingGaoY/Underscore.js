@@ -1,5 +1,3 @@
-import { Func } from 'mocha';
-
 interface List<T> {
   [index: number]: T;
   length: number;
@@ -8,6 +6,12 @@ interface List<T> {
 interface Dictionary<T> {
   [index: string]: T;
 }
+
+type Collection<T> = List<T> | Dictionary<T>;
+type TypeOfCollection<V> =
+  V extends List<infer T> ? T
+  : V extends Dictionary<infer T> ? T
+  : never;
 
 export { List, Dictionary };
 
@@ -78,9 +82,9 @@ function reduce<T, TResult>(obj: any, func: Function, initialValue?: TResult): T
 function findKey<T>(obj: Dictionary<T>, predicate: Function, thisArg?: any): string|undefined {
   const keys = Object.keys(obj);
   let currentKey;
-  for(let i = 0, length = keys.length; i < length; i++){
+  for (let i = 0, { length } = keys; i < length; i++) {
     currentKey = keys[i];
-    if (predicate.call(thisArg, obj[currentKey], currentKey, obj)){
+    if (predicate.call(thisArg, obj[currentKey], currentKey, obj)) {
       return currentKey;
     }
   }
@@ -105,16 +109,20 @@ const findLastIndex = createPredicateIndexFinder(-1);
 function find<T>(list: List<T>, predicate: Function, thisArg?: any): T|undefined;
 function find<T>(obj: Dictionary<T>, predicate: Function, thisArg?: any): T|undefined;
 function find<T>(obj: any, predicate: Function, thisArg?: any): T|undefined {
-  let finder = obj.length ? findIndex : findKey;
+  const finder = obj.length ? findIndex : findKey;
   const key = finder(obj, predicate, thisArg);
-  if (key !== void 0 && key !== -1) return obj[key];
+  if (key !== undefined && key !== -1) return obj[key];
   return undefined;
 }
 
-export function filter<T>(obj: Array<T>, predicate: Function, thisArg?: any): Array<T> {
-  const results: Array<T> = [];
+function filter<T extends Collection<any>>(
+  obj: T,
+  predicate: Function,
+  thisArg?: any,
+): TypeOfCollection<T>[] {
+  const results: TypeOfCollection<T>[] = [];
 
-  each(obj, (element: T, index: number, array: Array<T>) => {
+  each(obj, (element: TypeOfCollection<T>, index: number, array: T) => {
     if (predicate(element, index, array)) results.push(element);
   }, thisArg);
 
@@ -134,6 +142,7 @@ export {
   map,
   reduce,
   find,
+  filter,
   findIndex,
   findLastIndex,
 };

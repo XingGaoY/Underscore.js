@@ -46,7 +46,7 @@ describe('Module Collections: ', () => {
     it('Iterating over object', () => {
       const answers: number[] = [];
       const obj = { one: 1, two: 2, three: 3 };
-      each(obj, (value: number, key: string) => answers.push(value));
+      each(obj, (value: number) => answers.push(value));
       assert.deepEqual(answers, [1, 2, 3]);
     });
   });
@@ -118,7 +118,7 @@ describe('Module Collections: ', () => {
     });
   });
 
-  describe('findIndexArray', () => {
+  describe('findIndex', () => {
     function isPrime(element: number) {
       let start = 2;
       while (start <= Math.sqrt(element)) {
@@ -158,12 +158,12 @@ describe('Module Collections: ', () => {
     });
 
     it('Find in object', () => {
-      const list = [{a: 1, b: 2}, {a: 2, b: 2}, {a: 1, b: 3}, {a: 1, b: 4}, {a: 2, b: 4}];
-      function findObj(element: {[x: string]: number}){
-        if(element.a == 1) return true;
-        else return false;
+      const list = [{ a: 1, b: 2 }, { a: 2, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }, { a: 2, b: 4 }];
+      function findObj(element: {[x: string]: number}) {
+        if (element.a === 1) return true;
+        return false;
       }
-      assert.deepEqual(find(list, findObj), {a: 1, b: 2});
+      assert.deepEqual(find(list, findObj), { a: 1, b: 2 });
     });
   });
 
@@ -178,10 +178,18 @@ describe('Module Collections: ', () => {
       const array = ['apple', 'banana', 'grapes', 'mango', 'orange'];
 
       function filterArray(query: String) {
-        return filter(array, (element: String) => element.toLowerCase().indexOf(query.toLowerCase()) > -1);
+        return filter(array,
+          (element: String) => element.toLowerCase().indexOf(query.toLowerCase()) > -1);
       }
 
       assert.deepEqual(filterArray('ap'), ['apple', 'grapes']);
+    });
+
+    it('Filter elements with propertys given value', () => {
+      const list = [{ a: 1, b: 2 }, { a: 2, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }];
+      const targetList = [{ a: 1, b: 2 }, { a: 1, b: 3 }, { a: 1, b: 4 }];
+      assert.deepEqual(filter(list, (element: {[x: string]: number}) => element.a === 1),
+        targetList);
     });
   });
 
