@@ -75,6 +75,17 @@ function reduce<T, TResult>(obj: any, func: Function, initialValue?: TResult): T
   return memo;
 }
 
+function findKey<T>(obj: Dictionary<T>, predicate: Function, thisArg?: any): string|undefined {
+  const keys = Object.keys(obj);
+  let currentKey;
+  for(let i = 0, length = keys.length; i < length; i++){
+    currentKey = keys[i];
+    if (predicate.call(thisArg, obj[currentKey], currentKey, obj)){
+      return currentKey;
+    }
+  }
+}
+
 function createPredicateIndexFinder(dir: number): Function {
   return function<T> (obj: Array<T>, predicate: Function, thisArg?: any) {
     let index = dir === 1 ? 0 : obj.length - 1;
@@ -88,12 +99,15 @@ function createPredicateIndexFinder(dir: number): Function {
     return -1;
   };
 }
-const findIndexArray = createPredicateIndexFinder(1);
-const findLastIndexArray = createPredicateIndexFinder(-1);
+const findIndex = createPredicateIndexFinder(1);
+const findLastIndex = createPredicateIndexFinder(-1);
 
-export function find<T>(obj: Array<T>, predicate: Function, thisArg?: any): T|undefined {
-  const key = findIndexArray(obj, predicate, thisArg);
-  if (key && key !== -1) return obj[key];
+function find<T>(list: List<T>, predicate: Function, thisArg?: any): T|undefined;
+function find<T>(obj: Dictionary<T>, predicate: Function, thisArg?: any): T|undefined;
+function find<T>(obj: any, predicate: Function, thisArg?: any): T|undefined {
+  let finder = obj.length ? findIndex : findKey;
+  const key = finder(obj, predicate, thisArg);
+  if (key !== void 0 && key !== -1) return obj[key];
   return undefined;
 }
 
@@ -119,6 +133,7 @@ export {
   each,
   map,
   reduce,
-  findIndexArray,
-  findLastIndexArray,
+  find,
+  findIndex,
+  findLastIndex,
 };

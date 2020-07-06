@@ -1,4 +1,4 @@
-import {each, map, reduce, findIndexArray} from './lib/upperscore'
+import {each, map, reduce, findIndex} from './lib/upperscore'
 import {performance} from 'perf_hooks';
 
 let array:Array<number> = new Array(10);
@@ -11,7 +11,7 @@ let sum = reduce([1,2,3], function (acc: number, cur: number) {
 }, 0);
 
 let idx = array.findIndex((element) => element > 5);
-let usidx = findIndexArray(array, (element: number) => element > 5);
+let usidx = findIndex(array, (element: number) => element > 5);
 
 console.log(idx);
 console.log(usidx);

@@ -4,8 +4,8 @@ import {
   each,
   map,
   reduce,
-  findIndexArray,
-  findLastIndexArray,
+  findIndex,
+  findLastIndex,
   find,
   filter,
   every,
@@ -133,17 +133,17 @@ describe('Module Collections: ', () => {
     const arrayNoPrime: number[] = [4, 6, 8];
 
     it('FindIndex first prime', () => {
-      const index = findIndexArray(arrayPrime, isPrime);
+      const index = findIndex(arrayPrime, isPrime);
       assert.deepEqual(index, 3);
     });
 
     it('FindLastIndex of prime', () => {
-      const index = findLastIndexArray(arrayPrime, isPrime);
+      const index = findLastIndex(arrayPrime, isPrime);
       assert.deepEqual(index, 5);
     });
 
     it('FindIndex no prime', () => {
-      const index = findIndexArray(arrayNoPrime, isPrime);
+      const index = findIndex(arrayNoPrime, isPrime);
       assert.deepEqual(index, -1);
     });
 
@@ -155,6 +155,15 @@ describe('Module Collections: ', () => {
     it('Find no prime', () => {
       const primeNumber = find([4, 6, 8], isPrime);
       assert.deepEqual(primeNumber, undefined);
+    });
+
+    it('Find in object', () => {
+      const list = [{a: 1, b: 2}, {a: 2, b: 2}, {a: 1, b: 3}, {a: 1, b: 4}, {a: 2, b: 4}];
+      function findObj(element: {[x: string]: number}){
+        if(element.a == 1) return true;
+        else return false;
+      }
+      assert.deepEqual(find(list, findObj), {a: 1, b: 2});
     });
   });
 
