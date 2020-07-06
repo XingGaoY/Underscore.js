@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import {
   each,
   map,
-  reduceArray,
+  reduce,
   findIndexArray,
   findLastIndexArray,
   find,
@@ -64,47 +64,47 @@ describe('Module Collections: ', () => {
       assert.deepEqual(answers, [3, 6, 9]);
     });
 
-    const obj = {0: {id: '1'}, 1: {id: '2'}};
+    const obj = { 0: { id: '1' }, 1: { id: '2' } };
     it('Map on arrayLikes', () => {
       const ids = map(obj, (n: { id: string; }) => n.id);
       assert.deepEqual(ids, ['1', '2']);
     });
 
-    const people = [{name: 'moe', age: 30}, {name: 'curly', age: 50}];
-    function gatherNames(element: { [x: string]: string | number; }){
-      return element['name'];
+    const people = [{ name: 'moe', age: 30 }, { name: 'curly', age: 50 }];
+    function gatherNames(element: { [x: string]: string | number; }) {
+      return element.name;
     }
 
     it('Gather property with name offered', () => {
-    assert.deepEqual(map(people, gatherNames), ['moe', 'curly']);
+      assert.deepEqual(map(people, gatherNames), ['moe', 'curly']);
     });
   });
 
-  describe('reduceArray: ', () => {
+  describe('reduce: ', () => {
     it('Sum simple array with init value 0', () => {
-      const sum: number = reduceArray([1, 2, 3], (memo: number, num: number) => memo + num, 0);
+      const sum: number = reduce([1, 2, 3], (memo: number, num: number) => memo + num, 0);
       assert.deepEqual(sum, 6);
     });
 
     it('Sum simple array with init value', () => {
-      const sum: number = reduceArray([1, 2, 3], (memo: number, num: number) => memo + num, 10);
+      const sum: number = reduce([1, 2, 3], (memo: number, num: number) => memo + num, 10);
       assert.deepEqual(sum, 16);
     });
 
     it('Sum with default init value', () => {
-      const sum: number = reduceArray([1, 2, 3], (memo: number, num: number) => memo + num);
+      const sum: number = reduce([1, 2, 3], (memo: number, num: number) => memo + num);
       assert.deepEqual(sum, 6);
     });
 
     it('Convert 2d array to 1d', () => {
-      const array1D: number[] = reduceArray([[0, 1], [2, 3], [4, 5]],
+      const array1D: number[] = reduce([[0, 1], [2, 3], [4, 5]],
         (memo: number[], cur: number[]) => memo.concat(cur));
       assert.deepEqual(array1D, [0, 1, 2, 3, 4, 5]);
     });
 
     it('Calculate number of occurence in array', () => {
       const array: string[] = ['1', '2', '3', '3', '2', '3'];
-      const countedOccurence: {[key: string]:number} = reduceArray(array,
+      const countedOccurence: {[key: string]:number} = reduce(array,
         (memo: {[key: string]:number}, cur: string) => {
           if (cur in memo) {
             memo[cur]++;

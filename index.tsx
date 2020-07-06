@@ -1,4 +1,4 @@
-import {each, map, reduceArray, findIndexArray} from './lib/upperscore'
+import {each, map, reduce, findIndexArray} from './lib/upperscore'
 import {performance} from 'perf_hooks';
 
 let array:Array<number> = new Array(10);
@@ -6,7 +6,7 @@ for(let i = 0; i < 10; i++){
     array[i] = i;
 }
 
-let sum = reduceArray([1,2,3], function (acc: number, cur: number) {
+let sum = reduce([1,2,3], function (acc: number, cur: number) {
     return acc + cur;
 }, 0);
 

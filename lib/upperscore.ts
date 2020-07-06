@@ -1,3 +1,5 @@
+import { Func } from 'mocha';
+
 interface List<T> {
   [index: number]: T;
   length: number;
@@ -11,7 +13,6 @@ export { List, Dictionary };
 
 function each<T>(list: List<T>, func: Function, thisArg?: any): List<T>;
 function each<T>(obj: Dictionary<T>, func: Function, thisArg?: any): Dictionary<T>;
-
 function each<T>(obj: any, func: Function, thisArg?: any): any {
   // Good things here is ts is definitely typed and a lot type checking is done in compile time
   // JS polyfill has type check, more rubust
@@ -49,9 +50,13 @@ function map<T>(obj: any, func: Function, thisArg?: any): any {
 
 // here return value and initialValue is not type T
 // explanation see uniTest: 'Calculate number of occurence in array'
-export function reduceArray<T, K>(obj: Array<T>, func: Function, initialValue?: K): K {
-  let memo: K; let
-    i = 0;
+function reduce<T, TResult>(list: List<T>, func: Function, initialValue?: TResult): TResult;
+function reduce<T, TResult>(obj: Dictionary<T>, func: Function, initialValue?: TResult): TResult;
+function reduce<T, TResult>(obj: any, func: Function, initialValue?: TResult): TResult {
+  const keys = !obj.length && Object.keys(obj);
+  const { length } = (keys || obj);
+  let i = 0; let
+    memo;
 
   if (initialValue) {
     memo = initialValue;
@@ -62,8 +67,9 @@ export function reduceArray<T, K>(obj: Array<T>, func: Function, initialValue?: 
     i++;
   }
 
-  for (; i < obj.length; i++) {
-    memo = func(memo, obj[i], i, obj);
+  for (; i < length; i++) {
+    const currentKey = keys ? keys[i] : i;
+    memo = func(memo, obj[currentKey], currentKey, obj);
   }
 
   return memo;
@@ -112,6 +118,7 @@ export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
 export {
   each,
   map,
+  reduce,
   findIndexArray,
   findLastIndexArray,
 };

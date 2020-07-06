@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findLastIndexArray = exports.findIndexArray = exports.map = exports.each = exports.every = exports.filter = exports.find = exports.reduceArray = void 0;
+exports.findLastIndexArray = exports.findIndexArray = exports.reduce = exports.map = exports.each = exports.every = exports.filter = exports.find = void 0;
 function each(obj, func, thisArg) {
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
     // JS polyfill has type check, more rubust
@@ -31,11 +31,10 @@ function map(obj, func, thisArg) {
     return ret;
 }
 exports.map = map;
-// here return value and initialValue is not type T
-// explanation see uniTest: 'Calculate number of occurence in array'
-function reduceArray(obj, func, initialValue) {
-    var memo;
-    var i = 0;
+function reduce(obj, func, initialValue) {
+    var keys = !obj.length && Object.keys(obj);
+    var length = (keys || obj).length;
+    var i = 0, memo;
     if (initialValue) {
         memo = initialValue;
     }
@@ -46,12 +45,13 @@ function reduceArray(obj, func, initialValue) {
         memo = obj[0];
         i++;
     }
-    for (; i < obj.length; i++) {
-        memo = func(memo, obj[i], i, obj);
+    for (; i < length; i++) {
+        var currentKey = keys ? keys[i] : i;
+        memo = func(memo, obj[currentKey], currentKey, obj);
     }
     return memo;
 }
-exports.reduceArray = reduceArray;
+exports.reduce = reduce;
 function createPredicateIndexFinder(dir) {
     return function (obj, predicate, thisArg) {
         var index = dir === 1 ? 0 : obj.length - 1;

@@ -5,7 +5,7 @@ var array = new Array(10);
 for (var i = 0; i < 10; i++) {
     array[i] = i;
 }
-var sum = upperscore_1.reduceArray([1, 2, 3], function (acc, cur) {
+var sum = upperscore_1.reduce([1, 2, 3], function (acc, cur) {
     return acc + cur;
 }, 0);
 var idx = array.findIndex(function (element) { return element > 5; });
