@@ -1,3 +1,5 @@
+import { lchmod } from 'fs';
+
 interface List<T> {
   [index: number]: T;
   length: number;
@@ -156,6 +158,31 @@ export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
   }
 
   return true;
+}
+
+export function pluck<V extends Collection<any>, K extends string|number>(
+  collection: V,
+  propertyName: K,
+): any[] {
+  return map(collection, (element: any) => element[propertyName]);
+}
+
+export function sortBy<T>(obj: List<T>, func: Function, thisArg?: any): List<T> {
+  let index = 0;
+  return pluck(map(obj, (value:any, key: number, list: List<T>) => ({
+    value,
+    index: index++,
+    criteria: func.call(thisArg, value, key, list),
+  })).sort((left: any, right: any) => {
+    const lCriteria = left.criteria;
+    const rCriteria = right.criteria;
+    if (lCriteria !== rCriteria) {
+      if (lCriteria > rCriteria || lCriteria === undefined) return 1;
+      if (lCriteria < rCriteria || rCriteria === undefined) return -1;
+    }
+
+    return left.index - right.index;
+  }), 'value');
 }
 
 export {

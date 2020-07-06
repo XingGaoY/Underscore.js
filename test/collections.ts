@@ -10,6 +10,8 @@ import {
   filter,
   where,
   every,
+  pluck,
+  sortBy,
 } from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
@@ -203,6 +205,13 @@ describe('Module Collections: ', () => {
     });
   });
 
+  describe('pluck', () => {
+    const people = [{ name: 'moe', age: 30 }, { name: 'curly', age: 50 }];
+    it('get a list of all property value with given key', () => {
+      assert.deepEqual(pluck(people, 'name'), ['moe', 'curly']);
+    });
+  });
+
   describe('Every', () => {
     const arraySmall = [12, 5, 8, 11];
     const arrayBig = [11, 12, 13];
@@ -218,6 +227,19 @@ describe('Module Collections: ', () => {
       assert.ok(every(arrayBig, function (this: {guard: 0}, element: number) {
         return element >= this.guard;
       }, { guard: 10 }));
+    });
+  });
+
+  describe('sortBy', () => {
+    const people = [{ name: 'moe', age: 30 }, { name: 'curly', age: 50 }, { name: 'larry', age: 50 }];
+    it('Sort with given name of property', () => {
+      assert.deepEqual(sortBy(people, (element: {[x: string]: any}) => element.name),
+        [{ name: 'curly', age: 50 }, { name: 'larry', age: 50 }, { name: 'moe', age: 30 }]);
+      // assert.deepEqual(pluck(people, 'name'), ['moe', 'curly']);
+    });
+
+    it('Sort number after sine function', () => {
+      assert.deepEqual(sortBy([1, 2, 3, 4, 5, 6], (num: number) => Math.sin(num)), [5, 4, 6, 3, 1, 2]);
     });
   });
 });
