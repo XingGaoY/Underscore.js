@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 import {
-  eachArray,
+  each,
   mapArray,
   reduceArray,
   findIndexArray,
@@ -12,16 +12,16 @@ import {
 } from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
-  describe('eachArray: ', () => {
+  describe('each: ', () => {
     it('Each iterator provide value and index', () => {
-      eachArray([1, 2, 3], (num: number, i: number) => {
+      each([1, 2, 3], (num: number, i: number) => {
         assert.strictEqual(num, i + 1);
       });
     });
 
     it('Context object property accessed', () => {
       const answers: number[] = [];
-      eachArray([1, 2, 3], function (this: {multiplier: 0}, num: number) {
+      each([1, 2, 3], function (this: {multiplier: 0}, num: number) {
         answers.push(num * this.multiplier);
       }, { multiplier: 5 });
       assert.deepEqual(answers, [5, 10, 15]);
@@ -29,7 +29,7 @@ describe('Module Collections: ', () => {
 
     it('Iterate simple array', () => {
       const answers: number[] = [];
-      eachArray([1, 2, 3], (num: number) => {
+      each([1, 2, 3], (num: number) => {
         answers.push(num);
       });
       assert.deepEqual(answers, [1, 2, 3]);
@@ -37,10 +37,17 @@ describe('Module Collections: ', () => {
 
     it('Able to reference original array in function', () => {
       let answer: boolean = false;
-      eachArray([1, 2, 3], (num: number, idx: number, arr: number[]) => {
+      each([1, 2, 3], (num: number, idx: number, arr: number[]) => {
         if (num in arr) { answer = true; }
       });
       assert.ok(answer);
+    });
+
+    it('Iterating over object', () => {
+      const answers: number[] = [];
+      const obj = { one: 1, two: 2, three: 3 };
+      each(obj, (value: number, key: string) => answers.push(value));
+      assert.deepEqual(answers, [1, 2, 3]);
     });
   });
 

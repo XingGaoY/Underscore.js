@@ -1,12 +1,33 @@
-export function eachArray<T>(obj: Array<T>, func: Function, thisArg?: any): Array<T> {
+interface List<T> {
+  [index: number]: T;
+  length: number;
+}
+
+interface Dictionary<T> {
+  [index: string]: T;
+}
+
+export { List, Dictionary };
+
+function each<T>(list: List<T>, func: Function, thisArg?: any): List<T>;
+function each<T>(obj: Dictionary<T>, func: Function, thisArg?: any): Dictionary<T>;
+
+function each<T>(obj: any, func: Function, thisArg?: any): any {
   const T = thisArg;
   // Good things here is ts is definitely typed and a lot type checking is done in compile time
   // JS polyfill has type check, more rubust
 
   // Notice it did not use `typeof thisArg !== undefined`, but length of args
 
-  for (let i = 0; i < obj.length; i++) {
-    func.call(T, obj[i], i, obj);
+  if (obj.length) {
+    for (let i = 0, { length } = obj; i < length; i++) {
+      func.call(T, obj[i], i, obj);
+    }
+  } else {
+    const keys = Object.keys(obj);
+    for (let i = 0, { length } = keys; i < length; i++) {
+      func.call(T, obj[keys[i]], keys[i], obj);
+    }
   }
   return obj;
 }
@@ -70,7 +91,7 @@ export function find<T>(obj: Array<T>, predicate: Function, thisArg?: any): T|un
 export function filter<T>(obj: Array<T>, predicate: Function, thisArg?: any): Array<T> {
   const results: Array<T> = [];
 
-  eachArray(obj, (element: T, index: number, array: Array<T>) => {
+  each(obj, (element: T, index: number, array: Array<T>) => {
     if (predicate(element, index, array)) results.push(element);
   }, thisArg);
 
@@ -85,4 +106,8 @@ export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
   return true;
 }
 
-export { findIndexArray, findLastIndexArray };
+export {
+  each,
+  findIndexArray,
+  findLastIndexArray,
+};

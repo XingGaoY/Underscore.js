@@ -1,17 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findLastIndexArray = exports.findIndexArray = exports.filter = exports.find = exports.reduceArray = exports.mapArray = exports.eachArray = void 0;
-function eachArray(obj, func, thisArg) {
+exports.findLastIndexArray = exports.findIndexArray = exports.each = exports.every = exports.filter = exports.find = exports.reduceArray = exports.mapArray = void 0;
+function each(obj, func, thisArg) {
     var T = thisArg;
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
     // JS polyfill has type check, more rubust
     // Notice it did not use `typeof thisArg !== undefined`, but length of args
-    for (var i = 0; i < obj.length; i++) {
-        func.call(T, obj[i], i, obj);
+    if (obj.length) {
+        for (var i = 0, length_1 = obj.length; i < length_1; i++) {
+            func.call(T, obj[i], i, obj);
+        }
+    }
+    else {
+        var keys = Object.keys(obj);
+        for (var i = 0, length_2 = keys.length; i < length_2; i++) {
+            func.call(T, obj[keys[i]], keys[i], obj);
+        }
     }
     return obj;
 }
-exports.eachArray = eachArray;
+exports.each = each;
 function mapArray(obj, func, thisArg) {
     var ret = new Array(obj.length);
     var T = thisArg;
@@ -68,10 +76,18 @@ function find(obj, predicate, thisArg) {
 exports.find = find;
 function filter(obj, predicate, thisArg) {
     var results = [];
-    eachArray(obj, function (element, index, array) {
+    each(obj, function (element, index, array) {
         if (predicate(element, index, array))
             results.push(element);
     }, thisArg);
     return results;
 }
 exports.filter = filter;
+function every(obj, cb, thisArg) {
+    for (var i = 0; i < obj.length; i++) {
+        if (!cb.call(thisArg, obj[i], i, obj))
+            return false;
+    }
+    return true;
+}
+exports.every = every;
