@@ -1,4 +1,4 @@
-import {each, mapArray, reduceArray, findIndexArray} from './lib/upperscore'
+import {each, map, reduceArray, findIndexArray} from './lib/upperscore'
 import {performance} from 'perf_hooks';
 
 let array:Array<number> = new Array(10);

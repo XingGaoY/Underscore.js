@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { describe, it } from 'mocha';
 import {
   each,
-  mapArray,
+  map,
   reduceArray,
   findIndexArray,
   findLastIndexArray,
@@ -51,17 +51,32 @@ describe('Module Collections: ', () => {
     });
   });
 
-  describe('mapArray: ', () => {
+  describe('map: ', () => {
     it('Double a simple array', () => {
-      const answers: number[] = mapArray([1, 2, 3], (element: number) => element * 2);
+      const answers = map([1, 2, 3], (element: number) => element * 2);
       assert.deepEqual(answers, [2, 4, 6]);
     });
 
     it('Triple simple array with multiplier in context', () => {
-      const answers: number[] = mapArray([1, 2, 3], function (this: {multiplier: 0}, num: number) {
+      const answers = map([1, 2, 3], function (this: {multiplier: 0}, num: number) {
         return num * this.multiplier;
       }, { multiplier: 3 });
       assert.deepEqual(answers, [3, 6, 9]);
+    });
+
+    const obj = {0: {id: '1'}, 1: {id: '2'}};
+    it('Map on arrayLikes', () => {
+      const ids = map(obj, (n: { id: string; }) => n.id);
+      assert.deepEqual(ids, ['1', '2']);
+    });
+
+    const people = [{name: 'moe', age: 30}, {name: 'curly', age: 50}];
+    function gatherNames(element: { [x: string]: string | number; }){
+      return element['name'];
+    }
+
+    it('Gather property with name offered', () => {
+    assert.deepEqual(map(people, gatherNames), ['moe', 'curly']);
     });
   });
 

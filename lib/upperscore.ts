@@ -13,7 +13,6 @@ function each<T>(list: List<T>, func: Function, thisArg?: any): List<T>;
 function each<T>(obj: Dictionary<T>, func: Function, thisArg?: any): Dictionary<T>;
 
 function each<T>(obj: any, func: Function, thisArg?: any): any {
-  const T = thisArg;
   // Good things here is ts is definitely typed and a lot type checking is done in compile time
   // JS polyfill has type check, more rubust
 
@@ -21,23 +20,27 @@ function each<T>(obj: any, func: Function, thisArg?: any): any {
 
   if (obj.length) {
     for (let i = 0, { length } = obj; i < length; i++) {
-      func.call(T, obj[i], i, obj);
+      func.call(thisArg, obj[i], i, obj);
     }
   } else {
     const keys = Object.keys(obj);
     for (let i = 0, { length } = keys; i < length; i++) {
-      func.call(T, obj[keys[i]], keys[i], obj);
+      func.call(thisArg, obj[keys[i]], keys[i], obj);
     }
   }
   return obj;
 }
 
-export function mapArray<T>(obj: Array<T>, func: Function, thisArg?: any): Array<T> {
-  const ret: Array<T> = new Array(obj.length); const
-    T = thisArg;
+function map<T>(list: List<T>, func: Function, thisArg?: any): any;
+function map<T>(obj: Dictionary<T>, func: Function, thisArg?: any): any;
+function map<T>(obj: any, func: Function, thisArg?: any): any {
+  const keys = !obj.length && Object.keys(obj);
+  const { length } = keys || obj;
+  const ret: Array<T> = new Array(length);
 
-  for (let i = 0; i < obj.length; i++) {
-    const modified = func.call(T, obj[i], i, obj);
+  for (let i = 0; i < length; i++) {
+    const currentKey = keys ? keys[i] : i;
+    const modified = func.call(thisArg, obj[currentKey], currentKey, obj);
     ret[i] = modified;
   }
 
@@ -108,6 +111,7 @@ export function every<T>(obj: Array<T>, cb: Function, thisArg?: any): boolean {
 
 export {
   each,
+  map,
   findIndexArray,
   findLastIndexArray,
 };

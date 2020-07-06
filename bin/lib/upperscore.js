@@ -1,35 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findLastIndexArray = exports.findIndexArray = exports.each = exports.every = exports.filter = exports.find = exports.reduceArray = exports.mapArray = void 0;
+exports.findLastIndexArray = exports.findIndexArray = exports.map = exports.each = exports.every = exports.filter = exports.find = exports.reduceArray = void 0;
 function each(obj, func, thisArg) {
-    var T = thisArg;
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
     // JS polyfill has type check, more rubust
     // Notice it did not use `typeof thisArg !== undefined`, but length of args
     if (obj.length) {
         for (var i = 0, length_1 = obj.length; i < length_1; i++) {
-            func.call(T, obj[i], i, obj);
+            func.call(thisArg, obj[i], i, obj);
         }
     }
     else {
         var keys = Object.keys(obj);
         for (var i = 0, length_2 = keys.length; i < length_2; i++) {
-            func.call(T, obj[keys[i]], keys[i], obj);
+            func.call(thisArg, obj[keys[i]], keys[i], obj);
         }
     }
     return obj;
 }
 exports.each = each;
-function mapArray(obj, func, thisArg) {
-    var ret = new Array(obj.length);
-    var T = thisArg;
-    for (var i = 0; i < obj.length; i++) {
-        var modified = func.call(T, obj[i], i, obj);
+function map(obj, func, thisArg) {
+    var keys = !obj.length && Object.keys(obj);
+    var length = (keys || obj).length;
+    var ret = new Array(length);
+    for (var i = 0; i < length; i++) {
+        var currentKey = keys ? keys[i] : i;
+        var modified = func.call(thisArg, obj[currentKey], currentKey, obj);
         ret[i] = modified;
     }
     return ret;
 }
-exports.mapArray = mapArray;
+exports.map = map;
 // here return value and initialValue is not type T
 // explanation see uniTest: 'Calculate number of occurence in array'
 function reduceArray(obj, func, initialValue) {
