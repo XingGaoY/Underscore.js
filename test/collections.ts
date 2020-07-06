@@ -1,7 +1,13 @@
 import { assert } from 'chai';
 import { describe, it } from 'mocha';
 import {
-  eachArray, mapArray, reduceArray, findIndexArray, findLastIndexArray, find,
+  eachArray,
+  mapArray,
+  reduceArray,
+  findIndexArray,
+  findLastIndexArray,
+  find,
+  filter,
 } from '../lib/upperscore';
 
 describe('Module Collections: ', () => {
@@ -126,6 +132,24 @@ describe('Module Collections: ', () => {
     it('Find no prime', () => {
       const primeNumber = find([4, 6, 8], isPrime);
       assert.deepEqual(primeNumber, undefined);
+    });
+  });
+
+  describe('Filter', () => {
+    it('Filter smaller value', () => {
+      const array = [12, 5, 8, 130, 44];
+      const filtered = filter(array, (element: number) => element >= 10);
+      assert.deepEqual(filtered, [12, 130, 44]);
+    });
+
+    it('Filter array with query', () => {
+      const array = ['apple', 'banana', 'grapes', 'mango', 'orange'];
+
+      function filterArray(query: String) {
+        return filter(array, (element: String) => element.toLowerCase().indexOf(query.toLowerCase()) > -1);
+      }
+
+      assert.deepEqual(filterArray('ap'), ['apple', 'grapes']);
     });
   });
 });

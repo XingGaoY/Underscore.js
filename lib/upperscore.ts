@@ -61,10 +61,20 @@ function createPredicateIndexFinder(dir: number): Function {
 const findIndexArray = createPredicateIndexFinder(1);
 const findLastIndexArray = createPredicateIndexFinder(-1);
 
-export function find<T>(obj: Array<T>, predicate: Function, thisArg?: any) {
+export function find<T>(obj: Array<T>, predicate: Function, thisArg?: any): T|undefined {
   const key = findIndexArray(obj, predicate, thisArg);
   if (key && key !== -1) return obj[key];
   return undefined;
+}
+
+export function filter<T>(obj: Array<T>, predicate: Function, thisArg?: any): Array<T> {
+  const results: Array<T> = [];
+
+  eachArray(obj, (element: T, index: number, array: Array<T>) => {
+    if (predicate(element, index, array)) results.push(element);
+  }, thisArg);
+
+  return results;
 }
 
 export { findIndexArray, findLastIndexArray };

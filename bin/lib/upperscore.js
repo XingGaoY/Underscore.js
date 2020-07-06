@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FindIndexArray = exports.ReduceArray = exports.MapArray = exports.EachArray = void 0;
-function EachArray(obj, func, thisArg) {
+exports.findLastIndexArray = exports.findIndexArray = exports.filter = exports.find = exports.reduceArray = exports.mapArray = exports.eachArray = void 0;
+function eachArray(obj, func, thisArg) {
     var T = thisArg;
     // Good things here is ts is definitely typed and a lot type checking is done in compile time
     // JS polyfill has type check, more rubust
@@ -11,27 +11,27 @@ function EachArray(obj, func, thisArg) {
     }
     return obj;
 }
-exports.EachArray = EachArray;
-;
-function MapArray(obj, func, thisArg) {
-    var ret = new Array(obj.length), T = thisArg;
+exports.eachArray = eachArray;
+function mapArray(obj, func, thisArg) {
+    var ret = new Array(obj.length);
+    var T = thisArg;
     for (var i = 0; i < obj.length; i++) {
         var modified = func.call(T, obj[i], i, obj);
         ret[i] = modified;
     }
     return ret;
 }
-exports.MapArray = MapArray;
-;
+exports.mapArray = mapArray;
 // here return value and initialValue is not type T
 // explanation see uniTest: 'Calculate number of occurence in array'
-function ReduceArray(obj, func, initialValue) {
-    var memo, i = 0;
+function reduceArray(obj, func, initialValue) {
+    var memo;
+    var i = 0;
     if (initialValue) {
         memo = initialValue;
     }
     else if (obj.length === 0) {
-        throw new TypeError("Reduce of empty array with no initial value.");
+        throw new TypeError('Reduce of empty array with no initial value.');
     }
     else {
         memo = obj[0];
@@ -42,9 +42,7 @@ function ReduceArray(obj, func, initialValue) {
     }
     return memo;
 }
-exports.ReduceArray = ReduceArray;
-var FindIndexArray = createPredicateIndexFinder(1);
-exports.FindIndexArray = FindIndexArray;
+exports.reduceArray = reduceArray;
 function createPredicateIndexFinder(dir) {
     return function (obj, predicate, thisArg) {
         var index = dir === 1 ? 0 : obj.length - 1;
@@ -54,13 +52,26 @@ function createPredicateIndexFinder(dir) {
                 return index;
             }
         }
+        return -1;
     };
 }
-/*
-export function us_each_obj<T extends object, U extends keyof T>(obj: T, func: Function): object {
-    let _keys: U = Object.keys(obj);
-    for(let i = 0; i < _keys.length; i++){
-        func(obj[_keys[i]], _keys[i], obj);
-    }
-    return obj;
-}*/ 
+var findIndexArray = createPredicateIndexFinder(1);
+exports.findIndexArray = findIndexArray;
+var findLastIndexArray = createPredicateIndexFinder(-1);
+exports.findLastIndexArray = findLastIndexArray;
+function find(obj, predicate, thisArg) {
+    var key = findIndexArray(obj, predicate, thisArg);
+    if (key && key !== -1)
+        return obj[key];
+    return undefined;
+}
+exports.find = find;
+function filter(obj, predicate, thisArg) {
+    var results = [];
+    eachArray(obj, function (element, index, array) {
+        if (predicate(element, index, array))
+            results.push(element);
+    }, thisArg);
+    return results;
+}
+exports.filter = filter;
